@@ -2,6 +2,9 @@ import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
 
+// TODO
+// South West has problems when activated at row 0 and column 3 or 4 ish (forgot whic one)
+
 public class State {
 
  public static int[][] board = new int[8][8];
@@ -131,143 +134,173 @@ public class State {
   return usersPos;
  }
 
- public void evaluateMove(int row, int column, int piece, int player) {
+ public boolean evaluateMove(int row, int column, int piece, int player) {
 
-  // TODO
-  // NE row == o || column == 7 AND OTHER ONE IS -> row == 0 && column 7
-  // INVESTIGATE Boolean continueSearching
 
   List boolList = new ArrayList < Boolean > ();
   boolean continueSearching = false;
   int target = (piece == 1) ? 2 : 1;
+  boolean isThisAValidMove = true;
 
   // Evaluate North
-
   if (row != 0) { // Check boundary of direction
-
    if ((board[row - 1][column] != 0) && (board[row - 1][column] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
     continueSearching = true;
    }
 
    if (continueSearching) {
     if (checkCardinalDirection((row - 1), column, target, NORTH)) {
+     System.out.println("N FINISHED");
      boolList.add(true);
     }
    }
 
   }
 
-  // Evaluate North East
-  System.out.println("ABOUT TO CHECK NE");
-  if ((row != 0) && (column != 7)) { // Check boundary of direction
-   System.out.println("NE IS OK");
-   if ((board[row - 1][column + 1] != 0) && (board[row - 1][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
-    System.out.println("YOU TOTALLY GOOD");
-    continueSearching = true;
-   }
+  continueSearching = false;
+  // Evaluate North East ( @ Current Position)
+  if (row != 0) { // Check boundary of direction
+   if (column != 7) {
+    if ((board[row - 1][column + 1] != 0) && (board[row - 1][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+     System.out.println("NE OK");
+     continueSearching = true;
+    }
 
-   if (continueSearching) {
-    System.out.println("NOW SEARCHING");
-    if (checkDiagonalDirection(row - 1, column + 1, target, NORTHEAST)) {
-     boolList.add(true);
+    if (continueSearching) {
+     if (checkDiagonalDirection(row - 1, column + 1, target, NORTHEAST)) {
+      System.out.println("NE FINISHED");
+      boolList.add(true);
+     }
     }
    }
-
   }
 
-  System.out.println("DONE WITH NE");
+
+  continueSearching = false;
   // Evaluate North West
-  if ((row != 0) && (column != 0)) { // Check boundary of direction
+  if (row != 0) { // Check boundary of direction
+   if (column != 0) {
+    if ((board[row - 1][column - 1] != 0) && (board[row - 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+     System.out.println("NW OK");
+     continueSearching = true;
+    }
 
-   if ((board[row - 1][column - 1] != 0) && (board[row - 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
-    continueSearching = true;
-   }
-
-   if (continueSearching) {
-    if (checkDiagonalDirection(row - 1, column - 1, target, NORTHWEST)) {
-     boolList.add(true);
+    if (continueSearching) {
+     if (checkDiagonalDirection(row - 1, column - 1, target, NORTHWEST)) {
+      System.out.println("NW FINISHED");
+      boolList.add(true);
+     }
     }
    }
-
   }
 
+  continueSearching = false;
   // Evaluate East
   if (column != 7) { // Check boundary of direction
 
    if ((board[row][column + 1] != 0) && (board[row][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+    System.out.println("E OK");
     continueSearching = true;
    }
 
    if (continueSearching) {
     if (checkCardinalDirection(row, (column + 1), target, EAST)) {
+     System.out.println("E FINISHED");
      boolList.add(true);
     }
    }
 
   }
 
+  continueSearching = false;
   // Evaluate West
-  if (column != 7) { // Check boundary of direction
+  if (column != 0) { // Check boundary of direction
 
    if ((board[row][column - 1] != 0) && (board[row][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+    System.out.println("W OK");
     continueSearching = true;
    }
 
    if (continueSearching) {
     if (checkCardinalDirection(row, (column - 1), target, WEST)) {
+     System.out.println("W FINISHED");
      boolList.add(true);
     }
    }
 
   }
 
-
+  continueSearching = false;
   // Evaluate South
   if (row != 7) { // Check boundary of direction
 
    if ((board[row + 1][column] != 0) && (board[row + 1][column] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
     continueSearching = true;
+    System.out.println("S OK");
    }
 
    if (continueSearching) {
     if (checkCardinalDirection(row + 1, column, target, SOUTH)) {
+     System.out.println("S FINISHED");
      boolList.add(true);
     }
    }
 
   }
 
+  continueSearching = false;
   // Evaluate South East
-  if ((row != 7) && (column != 7)) { // Check boundary of direction
+  if (row != 7) { // Check boundary of direction
+   if (column != 7) {
+    if ((board[row + 1][column + 1] != 0) && (board[row + 1][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+     continueSearching = true;
+     System.out.println("SE OK");
+    }
 
-   if ((board[row + 1][column + 1] != 0) && (board[row + 1][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
-    continueSearching = true;
-   }
-
-   if (continueSearching) {
-    if (checkDiagonalDirection(row + 1, column + 1, target, SOUTHEAST)) {
-     boolList.add(true);
+    if (continueSearching) {
+     if (checkDiagonalDirection(row + 1, column + 1, target, SOUTHEAST)) {
+      System.out.println("SE FINISHED");
+      boolList.add(true);
+     }
     }
    }
-
   }
 
+  continueSearching = false;
   // Evaluate South West
-  if ((row != 7) && (column != 0)) { // Check boundary of direction
+  if (row != 7) { // Check boundary of direction
 
-   if ((board[row + 1][column - 1] != 0) && (board[row + 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
-    continueSearching = true;
-   }
+   if (column != 0) {
+    if ((board[row + 1][column - 1] != 0) && (board[row + 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+     continueSearching = true;
+     System.out.println("SW OK");
+    }
 
-   if (continueSearching) {
-    if (checkDiagonalDirection(row + 1, column - 1, target, SOUTHWEST)) {
-     boolList.add(true);
+    if (continueSearching) {
+     if (checkDiagonalDirection(row + 1, column - 1, target, SOUTHWEST)) {
+      System.out.println("SW FINISHED");
+      boolList.add(true);
+     }
     }
    }
-
   }
 
 
+  // If there were no valid moves, set the current position back to 0
+  // And notify the while loop with a boolean that allows
+  // the player to make another move.
+  if (boolList.size() == 0) {
+   System.out.println("INVALID MOVE");
+   board[row][column] = 0;
+   isThisAValidMove = false;
+  }
+
+
+  // These cases won't work anymore
+  // Why?
+  // Becuase the user could of just made an invalid move.
+  // We don't know if the user either made an invalid move or just lost all of their turns
+  // We'll have to come up with something new
   if (player == 1 && boolList.size() == 0) {
    skipPlayer1 = true;
   }
@@ -278,6 +311,7 @@ public class State {
 
   printBoard();
 
+  return isThisAValidMove;
  }
 
 
@@ -285,35 +319,44 @@ public class State {
   int piece = (target == 1) ? 2 : 1;
 
   if (board[row][column] == piece) {
+   System.out.println("CONTINUE LOOP ACTIVATED");
    return true;
   } else if (direction == NORTH && row == 0) {
+   System.out.println("Hit the end N");
    return false;
   } else if (direction == EAST && column == 7) {
+   System.out.println("Hit the end E");
    return false;
   } else if (direction == WEST && column == 0) {
+   System.out.println("Hit the end W");
    return false;
   } else if (direction == SOUTH && row == 7) {
+   System.out.println("Hit the end S");
    return false;
   }
 
 
   if (direction == NORTH) {
    if (checkCardinalDirection(row - 1, column, target, NORTH) == true) {
+    System.out.println("N FLIPPED");
     board[row][column] = piece;
     return true;
    }
   } else if (direction == EAST) {
    if (checkCardinalDirection(row, column + 1, target, EAST) == true) {
+    System.out.println("E FLIPPED");
     board[row][column] = piece;
     return true;
    }
   } else if (direction == WEST) {
    if (checkCardinalDirection(row, column - 1, target, WEST) == true) {
+    System.out.println("W FLIPPED");
     board[row][column] = piece;
     return true;
    }
   } else if (direction == SOUTH) {
    if (checkCardinalDirection(row + 1, column, target, SOUTH) == true) {
+    System.out.println("S FLIPPED");
     board[row][column] = piece;
     return true;
    }
@@ -323,48 +366,55 @@ public class State {
  }
 
  boolean checkDiagonalDirection(int row, int column, int target, String direction) {
+
+  System.out.println("DIAG CALLED");
   int piece = (target == 1) ? 2 : 1;
 
   if (board[row][column] == piece) {
-   if (direction == NORTHEAST) {
-    System.out.println("NE PLACE WAS YOUR PIECE");
-   }
+   System.out.println("DIAG LOOP END CALLED");
    return true;
-  } else if (direction == NORTHEAST && row == 0 && column == 7) {
-   System.out.println("NE WAS AT CORNER");
+  } else if (direction == NORTHEAST && (row == 0 || column == 7)) {
+   System.out.println("Hit the end NE");
    return false;
-  } else if (direction == NORTHWEST && row == 0 && column == 0) {
+  } else if (direction == NORTHWEST && (row == 0 || column == 0)) {
+   System.out.println("Hit the end NW");
    return false;
-  } else if (direction == SOUTHEAST && row == 7 && column == 7) {
+  } else if (direction == SOUTHEAST && (row == 7 || column == 7)) {
+   System.out.println("Hit the end SE");
    return false;
-  } else if (direction == SOUTHWEST && row == 7 && column == 0) {
+  } else if (direction == SOUTHWEST && (row == 7 || column == 0)) {
+   System.out.println("Hit the end SW");
    return false;
   }
 
 
   if (direction == NORTHEAST) {
    if (checkCardinalDirection(row - 1, column + 1, target, NORTHEAST) == true) {
-    System.out.println("NE WAS ALLOWED TO CONTINUE.");
+    System.out.println("NE FLIPPED");
     board[row][column] = piece;
     return true;
    }
   } else if (direction == NORTHWEST) {
    if (checkCardinalDirection(row - 1, column - 1, target, NORTHWEST) == true) {
+    System.out.println("NW FLIPPED");
     board[row][column] = piece;
     return true;
    }
   } else if (direction == SOUTHEAST) {
    if (checkCardinalDirection(row + 1, column + 1, target, SOUTHEAST) == true) {
+    System.out.println("SE FLIPPED");
     board[row][column] = piece;
     return true;
    }
   } else if (direction == SOUTHWEST) {
    if (checkCardinalDirection(row + 1, column - 1, target, SOUTHWEST) == true) {
+    System.out.println("SW FLIPPED");
     board[row][column] = piece;
     return true;
    }
   }
 
+  System.out.println("DIAG FALSE");
   return false;
  }
 
@@ -406,6 +456,7 @@ public class State {
  public static void main(String[] args) {
   State state = new State();
   int counter = 0;
+  boolean isValidMove = false;
   Scanner reader = new Scanner(System.in);
 
   state.printBoard();
@@ -418,17 +469,18 @@ public class State {
     int player = 1;
     int[] pos = new int[2];
     pos = state.readPlayerInput(piece, reader);
-    state.evaluateMove(pos[0], pos[1], piece, player);
+    isValidMove = state.evaluateMove(pos[0], pos[1], piece, player);
 
    } else {
     int piece = 2;
     int player = 2;
     int[] pos = new int[2];
     pos = state.readPlayerInput(piece, reader);
-    state.evaluateMove(pos[0], pos[1], piece, player);
+    isValidMove = state.evaluateMove(pos[0], pos[1], piece, player);
    }
-
-   counter++;
+   if (isValidMove) {
+    counter++;
+   }
   }
 
   if (winner() == 1) {
