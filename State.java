@@ -134,13 +134,12 @@ public class State {
   return usersPos;
  }
 
- public boolean evaluateMove(int row, int column, int piece, int player) {
+ public void evaluateMove(int row, int column, int piece, int player) {
 
 
   List boolList = new ArrayList < Boolean > ();
   boolean continueSearching = false;
   int target = (piece == 1) ? 2 : 1;
-  boolean isThisAValidMove = true;
 
   // Evaluate North
   if (row != 0) { // Check boundary of direction
@@ -456,7 +455,6 @@ public class State {
  public static void main(String[] args) {
   State state = new State();
   int counter = 0;
-  boolean isValidMove = false;
   Scanner reader = new Scanner(System.in);
 
   state.printBoard();
@@ -469,18 +467,16 @@ public class State {
     int player = 1;
     int[] pos = new int[2];
     pos = state.readPlayerInput(piece, reader);
-    isValidMove = state.evaluateMove(pos[0], pos[1], piece, player);
+    state.evaluateMove(pos[0], pos[1], piece, player);
 
    } else {
     int piece = 2;
     int player = 2;
     int[] pos = new int[2];
     pos = state.readPlayerInput(piece, reader);
-    isValidMove = state.evaluateMove(pos[0], pos[1], piece, player);
+    state.evaluateMove(pos[0], pos[1], piece, player);
    }
-   if (isValidMove) {
     counter++;
-   }
   }
 
   if (winner() == 1) {
