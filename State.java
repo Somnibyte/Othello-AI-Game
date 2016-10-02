@@ -413,17 +413,20 @@ public class State {
 
  boolean checkDiagonalDirection(int row, int column, int target, String direction, boolean checkingForValidMove) {
 
-   System.out.println("Checking FROM DIAG: " + board[row+1][column-1]);
+   System.out.println("Checking FROM DIAG: " + board[row+1][column-1] + " WITH DIR: " + direction);
   int piece = (target == 1) ? 2 : 1;
 
   if (board[row][column] == piece) {
     System.out.println("EXIT 1");
    return true;
   } else if (direction == NORTHEAST && (row == 0 || column == 7)) {
+    System.out.println("EXIT 2");
    return false;
   } else if (direction == NORTHWEST && (row == 0 || column == 0)) {
+    System.out.println("EXIT 3");
    return false;
   } else if (direction == SOUTHEAST && (row == 7 || column == 7)) {
+    System.out.println("EXIT 4");
    return false;
   } else if (direction == SOUTHWEST && (row == 7 || column == 0)) {
     System.out.println("EXIT 2");
@@ -432,7 +435,9 @@ public class State {
 
 
   if (direction == NORTHEAST) {
-   if (checkCardinalDirection(row - 1, column + 1, target, NORTHEAST, checkingForValidMove) == true) {
+    System.out.println("GOT INTO NE");
+   if (checkDiagonalDirection(row - 1, column + 1, target, NORTHEAST, checkingForValidMove) == true) {
+     System.out.println("NE OK");
     if (!checkingForValidMove) {
      System.out.println("NE FLIPPED");
      board[row][column] = piece;
@@ -440,7 +445,9 @@ public class State {
     return true;
    }
   } else if (direction == NORTHWEST) {
-   if (checkCardinalDirection(row - 1, column - 1, target, NORTHWEST, checkingForValidMove) == true) {
+    System.out.println("GOT INTO NW");
+   if (checkDiagonalDirection(row - 1, column - 1, target, NORTHWEST, checkingForValidMove) == true) {
+     System.out.println("NW OK");
     if (!checkingForValidMove) {
      System.out.println("NW FLIPPED");
      board[row][column] = piece;
@@ -448,7 +455,9 @@ public class State {
     return true;
    }
   } else if (direction == SOUTHEAST) {
-   if (checkCardinalDirection(row + 1, column + 1, target, SOUTHEAST, checkingForValidMove) == true) {
+    System.out.println("GOT INTO SE");
+   if (checkDiagonalDirection(row + 1, column + 1, target, SOUTHEAST, checkingForValidMove) == true) {
+     System.out.println("SE OK");
     if (!checkingForValidMove) {
      System.out.println("SE FLIPPED");
      board[row][column] = piece;
@@ -456,8 +465,10 @@ public class State {
     return true;
    }
   } else if (direction == SOUTHWEST) {
-
-   if (checkCardinalDirection(row + 1, column - 1, target, SOUTHWEST, checkingForValidMove) == true) {
+    System.out.println("GOT INTO SW");
+    System.out.println("Future piece: " + board[row+1][column-1]);
+   if (checkDiagonalDirection(row + 1, column - 1, target, SOUTHWEST, checkingForValidMove) == true) {
+     System.out.println("SW NOT OK");
     if (!checkingForValidMove) {
      System.out.println("SW FLIPPED");
      board[row][column] = piece;
@@ -466,6 +477,8 @@ public class State {
     System.out.println("SW FINE");
     return true;
    }
+
+   System.out.println("SW SKIPPED");
   }
 
   System.out.println("Couldn't flip anything");
