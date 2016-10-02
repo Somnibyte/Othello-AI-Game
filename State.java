@@ -60,7 +60,7 @@ public class State {
     if (board[i][j] != 0)
      System.out.print(" " + board[i][j] + " |");
     else
-     System.out.print(" " + board[i][j] + " |");
+     System.out.print(" " + " " + " |");
    }
 
    System.out.println("");
@@ -141,7 +141,7 @@ public class State {
 
   for (int i = 0; i < 8; i++) {
    for (int j = 0; j < 8; j++) {
-     System.out.println("CURRENTLY CHECKING i: " + i + " j: " + j);
+     //System.out.println("CURRENTLY CHECKING i: " + i + " j: " + j);
      if ( board[i][j] == 0 && evaluateMove(i, j, piece, player, true)) {
      //convert row to letter
      switch (i) {
@@ -176,7 +176,7 @@ public class State {
      String position = columnChar + column;
      availableMoves.add(position);
     }
-    System.out.println("END OF CHECKING i: " + i + " j: " + j);
+    //System.out.println("END OF CHECKING i: " + i + " j: " + j);
    }
   }
 
@@ -334,7 +334,7 @@ public class State {
      System.out.println("");
     if ((board[row + 1][column - 1] != 0) && (board[row + 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
      continueSearching = true;
-     System.out.println("WORKING WITH SW");
+     //System.out.println("WORKING WITH SW");
     }
 
     if (continueSearching) {
@@ -377,7 +377,7 @@ public class State {
   if (direction == NORTH) {
    if (checkCardinalDirection(row - 1, column, target, NORTH, checkingForValidMove) == true) {
     if (!checkingForValidMove) {
-     System.out.println("N FLIPPED");
+     //System.out.println("N FLIPPED");
      board[row][column] = piece;
     }
     return true;
@@ -385,7 +385,7 @@ public class State {
   } else if (direction == EAST) {
    if (checkCardinalDirection(row, column + 1, target, EAST, checkingForValidMove) == true) {
     if (!checkingForValidMove) {
-     System.out.println("E FLIPPED");
+     //System.out.println("E FLIPPED");
      board[row][column] = piece;
     }
     return true;
@@ -393,7 +393,7 @@ public class State {
   } else if (direction == WEST) {
    if (checkCardinalDirection(row, column - 1, target, WEST, checkingForValidMove) == true) {
     if (!checkingForValidMove) {
-     System.out.println("W FLIPPED");
+     //System.out.println("W FLIPPED");
      board[row][column] = piece;
     }
     return true;
@@ -401,7 +401,7 @@ public class State {
   } else if (direction == SOUTH) {
    if (checkCardinalDirection(row + 1, column, target, SOUTH, checkingForValidMove) == true) {
     if (!checkingForValidMove) {
-     System.out.println("S FLIPPED");
+     //System.out.println("S FLIPPED");
      board[row][column] = piece;
     }
     return true;
@@ -413,75 +413,73 @@ public class State {
 
  boolean checkDiagonalDirection(int row, int column, int target, String direction, boolean checkingForValidMove) {
 
-   System.out.println("Checking FROM DIAG: " + board[row+1][column-1] + " WITH DIR: " + direction);
   int piece = (target == 1) ? 2 : 1;
 
   if (board[row][column] == piece) {
-    System.out.println("EXIT 1");
+    //System.out.println("EXIT 1");
    return true;
   } else if (direction == NORTHEAST && (row == 0 || column == 7)) {
-    System.out.println("EXIT 2");
+    //System.out.println("EXIT 2");
    return false;
   } else if (direction == NORTHWEST && (row == 0 || column == 0)) {
-    System.out.println("EXIT 3");
+    //System.out.println("EXIT 3");
    return false;
   } else if (direction == SOUTHEAST && (row == 7 || column == 7)) {
-    System.out.println("EXIT 4");
+    //System.out.println("EXIT 4");
    return false;
   } else if (direction == SOUTHWEST && (row == 7 || column == 0)) {
-    System.out.println("EXIT 2");
+    //System.out.println("EXIT 2");
    return false;
   }
 
 
   if (direction == NORTHEAST) {
-    System.out.println("GOT INTO NE");
+    //System.out.println("GOT INTO NE");
    if (checkDiagonalDirection(row - 1, column + 1, target, NORTHEAST, checkingForValidMove) == true) {
-     System.out.println("NE OK");
+    // System.out.println("NE OK");
     if (!checkingForValidMove) {
-     System.out.println("NE FLIPPED");
+    // System.out.println("NE FLIPPED");
      board[row][column] = piece;
     }
     return true;
    }
   } else if (direction == NORTHWEST) {
-    System.out.println("GOT INTO NW");
+    //System.out.println("GOT INTO NW");
    if (checkDiagonalDirection(row - 1, column - 1, target, NORTHWEST, checkingForValidMove) == true) {
-     System.out.println("NW OK");
+     // System.out.println("NW OK");
     if (!checkingForValidMove) {
-     System.out.println("NW FLIPPED");
+     // System.out.println("NW FLIPPED");
      board[row][column] = piece;
     }
     return true;
    }
   } else if (direction == SOUTHEAST) {
-    System.out.println("GOT INTO SE");
+  //  System.out.println("GOT INTO SE");
    if (checkDiagonalDirection(row + 1, column + 1, target, SOUTHEAST, checkingForValidMove) == true) {
-     System.out.println("SE OK");
+    // System.out.println("SE OK");
     if (!checkingForValidMove) {
-     System.out.println("SE FLIPPED");
+     //System.out.println("SE FLIPPED");
      board[row][column] = piece;
     }
     return true;
    }
   } else if (direction == SOUTHWEST) {
-    System.out.println("GOT INTO SW");
-    System.out.println("Future piece: " + board[row+1][column-1]);
+    //System.out.println("GOT INTO SW");
    if (checkDiagonalDirection(row + 1, column - 1, target, SOUTHWEST, checkingForValidMove) == true) {
-     System.out.println("SW NOT OK");
+    // System.out.println("SW NOT OK");
     if (!checkingForValidMove) {
-     System.out.println("SW FLIPPED");
+     // System.out.println("SW FLIPPED");
      board[row][column] = piece;
     }
 
-    System.out.println("SW FINE");
+  //  System.out.println("SW FINE");
     return true;
    }
 
-   System.out.println("SW SKIPPED");
+   //System.out.println("SW SKIPPED");
   }
 
-  System.out.println("Couldn't flip anything");
+  //System.out.println("Couldn't flip anything");
   return false;
  }
 
@@ -536,7 +534,6 @@ public class State {
     int piece = 1;
     int player = 1;
     int[] pos = new int[2];
-    System.out.println("4,4 has: " + board[4][4]);
 
     availableMoves = state.checkAvailableMoves(player, piece);
 
