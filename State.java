@@ -9,9 +9,10 @@ public class State {
 
  public static int[][] board = new int[8][8];
  public int SEF;
+ public int numberOfFlanks = 0;
+ public int numberOfCorners = 0;
+ public int numberOfDirections = 0;
  public boolean isroot;
- public static boolean skipPlayer1 = false;
- public static boolean skipPlayer2 = false;
  final String NORTH = "NORTH";
  final String NORTHEAST = "NORTHEAST";
  final String NORTHWEST = "NORTHWEST";
@@ -83,7 +84,6 @@ public class State {
 
  }
 
-
  public int[] readPlayerInput(int piece, Scanner reader) {
 
   char number;
@@ -123,9 +123,6 @@ public class State {
     break;
   }
 
-
-  // When we firgure out the color we will adjust this
-  board[row][column] = piece;
 
   // Save position
   usersPos[0] = row;
@@ -215,6 +212,7 @@ public class State {
   int target = (piece == 1) ? 2 : 1;
   boolean isThisAValidMove = true;
 
+
   // Evaluate North
   if (row != 0) { // Check boundary of direction
    if ((board[row - 1][column] != 0) && (board[row - 1][column] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
@@ -223,7 +221,8 @@ public class State {
 
    if (continueSearching) {
     if (checkCardinalDirection((row - 1), column, target, NORTH, checkingForValidMove)) {
-     boolList.add(true);
+     	this.numberOfDirections++;
+      boolList.add(true);
     }
    }
 
@@ -239,7 +238,8 @@ public class State {
 
     if (continueSearching) {
      if (checkDiagonalDirection(row - 1, column + 1, target, NORTHEAST, checkingForValidMove)) {
-      boolList.add(true);
+       this.numberOfDirections++;
+       boolList.add(true);
      }
     }
    }
@@ -257,6 +257,7 @@ public class State {
     if (continueSearching) {
      if (checkDiagonalDirection(row - 1, column - 1, target, NORTHWEST, checkingForValidMove)) {
       boolList.add(true);
+       this.numberOfDirections++;
      }
     }
    }
@@ -273,6 +274,7 @@ public class State {
    if (continueSearching) {
     if (checkCardinalDirection(row, (column + 1), target, EAST, checkingForValidMove)) {
      boolList.add(true);
+       this.numberOfDirections++;
     }
    }
 
@@ -289,6 +291,7 @@ public class State {
    if (continueSearching) {
     if (checkCardinalDirection(row, (column - 1), target, WEST, checkingForValidMove)) {
      boolList.add(true);
+       this.numberOfDirections++;
     }
    }
 
@@ -305,6 +308,7 @@ public class State {
    if (continueSearching) {
     if (checkCardinalDirection(row + 1, column, target, SOUTH, checkingForValidMove)) {
      boolList.add(true);
+       this.numberOfDirections++;
     }
    }
 
@@ -321,6 +325,7 @@ public class State {
     if (continueSearching) {
      if (checkDiagonalDirection(row + 1, column + 1, target, SOUTHEAST, checkingForValidMove)) {
       boolList.add(true);
+       this.numberOfDirections++;
      }
     }
    }
@@ -331,7 +336,6 @@ public class State {
   if (row != 7) { // Check boundary of direction
 
    if (column != 0) {
-     System.out.println("");
     if ((board[row + 1][column - 1] != 0) && (board[row + 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
      continueSearching = true;
      //System.out.println("WORKING WITH SW");
@@ -340,6 +344,7 @@ public class State {
     if (continueSearching) {
      if (checkDiagonalDirection(row + 1, column - 1, target, SOUTHWEST, checkingForValidMove)) {
       boolList.add(true);
+       this.numberOfDirections++;
      }
     }
    }
@@ -348,7 +353,18 @@ public class State {
   // Check if a move is valid
   if (boolList.size() == 0) {
    isThisAValidMove = false;
+  }else{
+
+    // Everything went fine. Now place the piece onto the board
+    board[row][column] = piece;
+
+    // Check if the piece is on a corner
+    if( (row == 0 && column == 0) || (row == 0 && column == 7) || (row == 7 && column == 0) || (row == 7 && column == 7) ) {
+      numberOfCorners = 1;
+    }
+
   }
+
 
   if (!checkingForValidMove) {
    printBoard();
@@ -379,6 +395,7 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("N FLIPPED");
      board[row][column] = piece;
+      this.numberOfFlanks++;
     }
     return true;
    }
@@ -387,6 +404,8 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("E FLIPPED");
      board[row][column] = piece;
+    	this.numberOfFlanks++;
+
     }
     return true;
    }
@@ -395,6 +414,8 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("W FLIPPED");
      board[row][column] = piece;
+      this.numberOfFlanks++;
+
     }
     return true;
    }
@@ -403,6 +424,7 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("S FLIPPED");
      board[row][column] = piece;
+      this.numberOfFlanks++;
     }
     return true;
    }
@@ -440,6 +462,7 @@ public class State {
     if (!checkingForValidMove) {
     // System.out.println("NE FLIPPED");
      board[row][column] = piece;
+      this.numberOfFlanks++;
     }
     return true;
    }
@@ -450,6 +473,7 @@ public class State {
     if (!checkingForValidMove) {
      // System.out.println("NW FLIPPED");
      board[row][column] = piece;
+      this.numberOfFlanks++;
     }
     return true;
    }
@@ -460,6 +484,7 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("SE FLIPPED");
      board[row][column] = piece;
+      this.numberOfFlanks++;
     }
     return true;
    }
@@ -470,6 +495,7 @@ public class State {
     if (!checkingForValidMove) {
      // System.out.println("SW FLIPPED");
      board[row][column] = piece;
+      this.numberOfFlanks++;
     }
 
   //  System.out.println("SW FINE");
@@ -484,106 +510,6 @@ public class State {
  }
 
 
- public static boolean gameOver() {
-  if (skipPlayer1 && skipPlayer2) {
-   return true;
-  } else {
-   return false;
-  }
- }
-
- public static int winner() {
-  int blackPebbles = 0;
-  int whitePebbles = 0;
-
-  for (int i = 0; i < 8; i++) {
-
-   for (int j = 0; j < 8; j++) {
-    if (board[i][j] == 1) {
-     blackPebbles++;
-    } else {
-     whitePebbles++;
-    }
-   }
-  }
-
-  if (blackPebbles > whitePebbles) {
-   return 1;
-  } else if (blackPebbles == whitePebbles) {
-   return 9001;
-  } else {
-   return 2;
-  }
-
- }
-
-
- public static void main(String[] args) {
-  State state = new State();
-  int counter = 0;
-  boolean isValidMove = false;
-  List < Object > availableMoves = new ArrayList < Object > ();
-  Scanner reader = new Scanner(System.in);
-
-  state.printBoard();
-
-  while (!gameOver()) {
-
-   // Even = PLAYER 1
-   if (counter % 2 == 0) {
-    int piece = 1;
-    int player = 1;
-    int[] pos = new int[2];
-
-    availableMoves = state.checkAvailableMoves(player, piece);
-
-    if ((boolean) availableMoves.get(0)) {
-
-     for (String move: (ArrayList < String > ) availableMoves.get(1)) {
-      System.out.print(move + ", ");
-     }
-
-     pos = state.readPlayerInput(piece, reader);
-     isValidMove = state.evaluateMove(pos[0], pos[1], piece, player, false);
-
-    } else {
-     System.out.println("There are no available moves.");
-    }
-
-   } else {
-    int piece = 2;
-    int player = 2;
-    int[] pos = new int[2];
-    availableMoves = state.checkAvailableMoves(player, piece);
-
-    if ((boolean) availableMoves.get(0)) {
-
-     for (String move: (ArrayList < String > ) availableMoves.get(1)) {
-      System.out.print(move + ", ");
-     }
-
-     pos = state.readPlayerInput(piece, reader);
-     isValidMove = state.evaluateMove(pos[0], pos[1], piece, player, false);
-
-    } else {
-     System.out.println("There are no available moves.");
-    }
-
-   }
-
-   counter++;
-
-  }
-
-  if (winner() == 1) {
-   System.out.println("PLAYER 1 WINS");
-  } else if (winner() == 2) {
-   System.out.println("PLAYER 2 WINS");
-  } else {
-   System.out.println("DRAAAAAAAAW!");
-  }
-
- }
 
 
 }
