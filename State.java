@@ -8,9 +8,10 @@ import java.util.List;
 public class State {
 
  public static int[][] board = new int[8][8];
+ public int piece = 0;
  public int SEF;
  public int numberOfFlanks = 0;
- public int numberOfCorners = 0;
+ public boolean hasCorner=false;
  public int numberOfDirections = 0;
  public boolean isroot;
  final String NORTH = "NORTH";
@@ -73,7 +74,6 @@ public class State {
  public State() {
   this.SEF = 1;
   this.isroot = true;
-
   if (isroot) {
    this.board[3][3] = 2;
    this.board[3][4] = 1;
@@ -178,12 +178,6 @@ public class State {
   }
 
   if (availableMoves.size() >= 1) { //have valid move(s) to make
-   if (player == 1) {
-    skipPlayer1 = false;
-   }
-   if (player == 2) {
-    skipPlayer2 = false;
-   }
 
    isValidMoveAndAvailableMoves.add(true);
    isValidMoveAndAvailableMoves.add(availableMoves);
@@ -192,12 +186,6 @@ public class State {
 
 
   isValidMoveAndAvailableMoves.add(false);
-  if (player == 1) {
-   skipPlayer1 = true;
-  }
-  if (player == 2) {
-   skipPlayer2 = true;
-  }
   return isValidMoveAndAvailableMoves;
 
 
@@ -205,7 +193,6 @@ public class State {
  }
 
  public boolean evaluateMove(int row, int column, int piece, int player, boolean checkingForValidMove) {
-
 
   List boolList = new ArrayList < Boolean > ();
   boolean continueSearching = false;
@@ -360,12 +347,12 @@ public class State {
 
     // Check if the piece is on a corner
     if( (row == 0 && column == 0) || (row == 0 && column == 7) || (row == 7 && column == 0) || (row == 7 && column == 7) ) {
-      numberOfCorners = 1;
+      hasCorner = true;
     }
 
   }
 
-
+	//if active gameplay and not checking
   if (!checkingForValidMove) {
    printBoard();
   }
