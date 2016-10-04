@@ -1,15 +1,18 @@
 import java.util.Scanner;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Arrays;
 
 // TODO
 // South West has problems when activated at row 0 and column 3 or 4 ish (forgot whic one)
 
 public class State {
 
- public static int[][] board = new int[8][8];
- public int piece = 0;
+ public Board board = new Board();
+ public List<Node> children = new ArrayList<Node>();
  public int SEF;
+ public int piece;
+ public int player;
  public int numberOfFlanks = 0;
  public boolean hasCorner=false;
  public int numberOfDirections = 0;
@@ -59,8 +62,8 @@ public class State {
    System.out.print(columnChar + " | ");
 
    for (int j = 0; j < 8; j++) {
-    if (board[i][j] != 0)
-     System.out.print(" " + board[i][j] + " |");
+    if (board.board[i][j] != 0)
+     System.out.print(" " + board.board[i][j] + " |");
     else
      System.out.print(" " + " " + " |");
    }
@@ -71,20 +74,73 @@ public class State {
   System.out.print("  ----------------------------------\n");
  }
 
- public State() {
+ public State(int piece, int player) {
+   //System.out.println("Initial state created");
   this.SEF = 1;
+  this.piece = piece;
+  this.player = player;
   this.isroot = true;
+
   if (isroot) {
-   this.board[3][3] = 2;
-   this.board[3][4] = 1;
-   this.board[4][3] = 1;
-   this.board[4][4] = 2;
+   this.board.board[3][3] = 2;
+   this.board.board[3][4] = 1;
+   this.board.board[4][3] = 1;
+   this.board.board[4][4] = 2;
 
   }
 
  }
 
- public int[] readPlayerInput(int piece, Scanner reader) {
+  public State(State s){
+    int[][] newboard = new int[8][8];
+
+    for (int i = 0; i < newboard.length; i++)
+         newboard[i] = Arrays.copyOf(s.board.board[i], s.board.board[i].length);
+
+    this.board = new Board(newboard);
+    this.SEF = s.SEF;
+    this.isroot = false;
+  }
+
+ public void makeMove(String move){
+
+   int row = 0;
+   int column = Integer.parseInt(Character.toString(move.charAt(1)));
+
+   switch (move.charAt(0)) {
+      case 'A':
+       row = 0;
+       break;
+      case 'B':
+       row = 1;
+       break;
+      case 'C':
+       row = 2;
+       break;
+      case 'D':
+       row = 3;
+       break;
+      case 'E':
+       row = 4;
+       break;
+      case 'F':
+       row = 5;
+       break;
+      case 'G':
+       row = 6;
+       break;
+      case 'H':
+       row = 7;
+       break;
+     }
+
+
+
+   evaluateMove(row,column,false);
+
+ }
+
+ public int[] readPlayerInput(Scanner reader) {
 
   char number;
   int[] usersPos = new int[2];
@@ -131,7 +187,7 @@ public class State {
   return usersPos;
  }
 
- public List < Object > checkAvailableMoves(int player, int piece) {
+ public List < Object > checkAvailableMoves() {
   char columnChar = ' ';
   List < String > availableMoves = new ArrayList < String > (); // Ex: ['A1','B2'...]
   List < Object > isValidMoveAndAvailableMoves = new ArrayList < Object > (); // Ex: [true, ['A1','B2'...]]
@@ -139,7 +195,7 @@ public class State {
   for (int i = 0; i < 8; i++) {
    for (int j = 0; j < 8; j++) {
      //System.out.println("CURRENTLY CHECKING i: " + i + " j: " + j);
-     if ( board[i][j] == 0 && evaluateMove(i, j, piece, player, true)) {
+     if ( board.board[i][j] == 0 && evaluateMove(i, j, true)) {
      //convert row to letter
      switch (i) {
       case 0:
@@ -181,18 +237,20 @@ public class State {
 
    isValidMoveAndAvailableMoves.add(true);
    isValidMoveAndAvailableMoves.add(availableMoves);
+   System.out.println("Has more than 1 available move.");
    return isValidMoveAndAvailableMoves;
   }
 
 
   isValidMoveAndAvailableMoves.add(false);
+
   return isValidMoveAndAvailableMoves;
 
 
 
  }
 
- public boolean evaluateMove(int row, int column, int piece, int player, boolean checkingForValidMove) {
+ public boolean evaluateMove(int row, int column, boolean checkingForValidMove) {
 
   List boolList = new ArrayList < Boolean > ();
   boolean continueSearching = false;
@@ -202,7 +260,7 @@ public class State {
 
   // Evaluate North
   if (row != 0) { // Check boundary of direction
-   if ((board[row - 1][column] != 0) && (board[row - 1][column] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+   if ((board.board[row - 1][column] != 0) && (board.board[row - 1][column] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
     continueSearching = true;
    }
 
@@ -219,7 +277,7 @@ public class State {
   // Evaluate North East ( @ Current Position)
   if (row != 0) { // Check boundary of direction
    if (column != 7) {
-    if ((board[row - 1][column + 1] != 0) && (board[row - 1][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+    if ((board.board[row - 1][column + 1] != 0) && (board.board[row - 1][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
      continueSearching = true;
     }
 
@@ -237,7 +295,7 @@ public class State {
   // Evaluate North West
   if (row != 0) { // Check boundary of direction
    if (column != 0) {
-    if ((board[row - 1][column - 1] != 0) && (board[row - 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+    if ((board.board[row - 1][column - 1] != 0) && (board.board[row - 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
      continueSearching = true;
     }
 
@@ -254,7 +312,7 @@ public class State {
   // Evaluate East
   if (column != 7) { // Check boundary of direction
 
-   if ((board[row][column + 1] != 0) && (board[row][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+   if ((board.board[row][column + 1] != 0) && (board.board[row][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
     continueSearching = true;
    }
 
@@ -271,7 +329,7 @@ public class State {
   // Evaluate West
   if (column != 0) { // Check boundary of direction
 
-   if ((board[row][column - 1] != 0) && (board[row][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+   if ((board.board[row][column - 1] != 0) && (board.board[row][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
     continueSearching = true;
    }
 
@@ -288,7 +346,7 @@ public class State {
   // Evaluate South
   if (row != 7) { // Check boundary of direction
 
-   if ((board[row + 1][column] != 0) && (board[row + 1][column] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+   if ((board.board[row + 1][column] != 0) && (board.board[row + 1][column] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
     continueSearching = true;
    }
 
@@ -305,7 +363,7 @@ public class State {
   // Evaluate South East
   if (row != 7) { // Check boundary of direction
    if (column != 7) {
-    if ((board[row + 1][column + 1] != 0) && (board[row + 1][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+    if ((board.board[row + 1][column + 1] != 0) && (board.board[row + 1][column + 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
      continueSearching = true;
     }
 
@@ -323,7 +381,7 @@ public class State {
   if (row != 7) { // Check boundary of direction
 
    if (column != 0) {
-    if ((board[row + 1][column - 1] != 0) && (board[row + 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
+    if ((board.board[row + 1][column - 1] != 0) && (board.board[row + 1][column - 1] != piece)) { //if adjacent space not  empty or space not  occupied by friendly piece
      continueSearching = true;
      //System.out.println("WORKING WITH SW");
     }
@@ -342,9 +400,6 @@ public class State {
    isThisAValidMove = false;
   }else{
 
-    // Everything went fine. Now place the piece onto the board
-    board[row][column] = piece;
-
     // Check if the piece is on a corner
     if( (row == 0 && column == 0) || (row == 0 && column == 7) || (row == 7 && column == 0) || (row == 7 && column == 7) ) {
       hasCorner = true;
@@ -354,7 +409,12 @@ public class State {
 
 	//if active gameplay and not checking
   if (!checkingForValidMove) {
-   printBoard();
+    // Everything went fine. Now place the piece onto the board
+  this.board.board[row][column] = piece;
+
+   //TODO: PRINT BOARD MUTED
+   //printBoard(); //
+
   }
 
   return isThisAValidMove;
@@ -364,7 +424,7 @@ public class State {
  boolean checkCardinalDirection(int row, int column, int target, String direction, boolean checkingForValidMove) {
   int piece = (target == 1) ? 2 : 1;
 
-  if (board[row][column] == piece) {
+  if (board.board[row][column] == piece) {
    return true;
   } else if (direction == NORTH && row == 0) {
    return false;
@@ -381,7 +441,7 @@ public class State {
    if (checkCardinalDirection(row - 1, column, target, NORTH, checkingForValidMove) == true) {
     if (!checkingForValidMove) {
      //System.out.println("N FLIPPED");
-     board[row][column] = piece;
+     board.board[row][column] = piece;
       this.numberOfFlanks++;
     }
     return true;
@@ -390,7 +450,7 @@ public class State {
    if (checkCardinalDirection(row, column + 1, target, EAST, checkingForValidMove) == true) {
     if (!checkingForValidMove) {
      //System.out.println("E FLIPPED");
-     board[row][column] = piece;
+     board.board[row][column] = piece;
     	this.numberOfFlanks++;
 
     }
@@ -400,7 +460,7 @@ public class State {
    if (checkCardinalDirection(row, column - 1, target, WEST, checkingForValidMove) == true) {
     if (!checkingForValidMove) {
      //System.out.println("W FLIPPED");
-     board[row][column] = piece;
+     board.board[row][column] = piece;
       this.numberOfFlanks++;
 
     }
@@ -410,7 +470,7 @@ public class State {
    if (checkCardinalDirection(row + 1, column, target, SOUTH, checkingForValidMove) == true) {
     if (!checkingForValidMove) {
      //System.out.println("S FLIPPED");
-     board[row][column] = piece;
+     board.board[row][column] = piece;
       this.numberOfFlanks++;
     }
     return true;
@@ -424,7 +484,7 @@ public class State {
 
   int piece = (target == 1) ? 2 : 1;
 
-  if (board[row][column] == piece) {
+  if (board.board[row][column] == piece) {
     //System.out.println("EXIT 1");
    return true;
   } else if (direction == NORTHEAST && (row == 0 || column == 7)) {
@@ -448,7 +508,7 @@ public class State {
     // System.out.println("NE OK");
     if (!checkingForValidMove) {
     // System.out.println("NE FLIPPED");
-     board[row][column] = piece;
+     board.board[row][column] = piece;
       this.numberOfFlanks++;
     }
     return true;
@@ -459,7 +519,7 @@ public class State {
      // System.out.println("NW OK");
     if (!checkingForValidMove) {
      // System.out.println("NW FLIPPED");
-     board[row][column] = piece;
+     board.board[row][column] = piece;
       this.numberOfFlanks++;
     }
     return true;
@@ -470,7 +530,7 @@ public class State {
     // System.out.println("SE OK");
     if (!checkingForValidMove) {
      //System.out.println("SE FLIPPED");
-     board[row][column] = piece;
+     board.board[row][column] = piece;
       this.numberOfFlanks++;
     }
     return true;
@@ -481,7 +541,7 @@ public class State {
     // System.out.println("SW NOT OK");
     if (!checkingForValidMove) {
      // System.out.println("SW FLIPPED");
-     board[row][column] = piece;
+     board.board[row][column] = piece;
       this.numberOfFlanks++;
     }
 
