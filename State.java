@@ -1,15 +1,10 @@
-import java.util.Scanner;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Arrays;
-
-// TODO
-// South West has problems when activated at row 0 and column 3 or 4 ish (forgot whic one)
+import java.util.*;
 
 public class State {
 
  public Board board = new Board();
  public List<Node> children = new ArrayList<Node>();
+ public HashMap<String, Node> moveAndChildNode = new HashMap<String, Node>();
  public int SEF;
  public int piece;
  public int player;
@@ -237,7 +232,7 @@ public class State {
 
    isValidMoveAndAvailableMoves.add(true);
    isValidMoveAndAvailableMoves.add(availableMoves);
-   System.out.println("Has more than 1 available move.");
+   //System.out.println("Has more than 1 available move.");
    return isValidMoveAndAvailableMoves;
   }
 
@@ -266,7 +261,7 @@ public class State {
 
    if (continueSearching) {
     if (checkCardinalDirection((row - 1), column, target, NORTH, checkingForValidMove)) {
-     	this.numberOfDirections++;
+      this.numberOfDirections++;
       boolList.add(true);
     }
    }
