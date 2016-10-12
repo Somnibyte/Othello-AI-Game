@@ -181,7 +181,6 @@ public class Othello {
     t1.start();
     try {
      t1.join();
-     System.out.println("After: " + currentPly.state.children.size());
     } catch (InterruptedException e) {
 
     }
@@ -254,7 +253,6 @@ public class Othello {
      currentPly = move;
 
      // Show the AI's move
-     System.out.println(currentPly);
      currentPly.state.printBoard();
     }
    }
