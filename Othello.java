@@ -23,7 +23,7 @@ public class Othello {
    }
    value = Integer.MIN_VALUE;
    for (Node n: node.state.children) {
-    RVal = minimax(n, level + 1, depth);
+    RVal =  initialMinimax(n, level + 1, depth);
     //System.out.println("RVAL IS CURRENTLY: " + RVal + " CURRENT VAL IS:" + value);
     if (RVal > value) {
      //System.out.println("CHANGED");
@@ -34,7 +34,7 @@ public class Othello {
   } else {
    value = Integer.MAX_VALUE;
    for (Node n: node.state.children) {
-    RVal = minimax(n, level + 1, depth);
+    RVal = initialMinimax(n, level + 1, depth);
     if (RVal < value) {
      value = RVal;
      node.SEF = value;
