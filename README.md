@@ -9,3 +9,8 @@ Othello AI Game
 Othello/Reversi game with AI built in using minimax algorithim and a simple static evaluation function. 
 
 # Install/Run
+Open your terminal and type:
+
+ `clear && javac Othello.java && java Othello`
+ 
+ And then put your sunglasses on. 😎
