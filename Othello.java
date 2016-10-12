@@ -23,7 +23,7 @@ public class Othello {
    }
    value = Integer.MIN_VALUE;
    for (Node n: node.state.children) {
-    RVal =  initialMinimax(n, level + 1, depth);
+    RVal = initialMinimax(n, level + 1, depth);
     //System.out.println("RVAL IS CURRENTLY: " + RVal + " CURRENT VAL IS:" + value);
     if (RVal > value) {
      //System.out.println("CHANGED");
@@ -68,7 +68,6 @@ public class Othello {
 
 
  public static void buildGameTree(List < Node > nodeArray, int Depth) {
-  System.out.println("Building tree");
   int piece = 0;
   int player = 0;
 
@@ -173,18 +172,17 @@ public class Othello {
    if (maxDepth == 0) {
     // If we reached the leaves, then reinitialize maxDepth to be 3
     maxDepth = 2;
-    System.out.println("Running minimax!");
     List < Node > newMove = new ArrayList < Node > ();
     newMove.add(currentPly);
-    System.out.println("BEFORE: " + currentPly.state.children.size());
+
     buildGameTree(newMove, maxDepth);
 
     MinimaxThread t1 = new MinimaxThread(0, maxDepth, currentPly);
     t1.start();
-    try{
-      t1.join();
-      System.out.println("After: " + currentPly.state.children.size());
-    }catch(InterruptedException e){
+    try {
+     t1.join();
+     System.out.println("After: " + currentPly.state.children.size());
+    } catch (InterruptedException e) {
 
     }
 
@@ -221,50 +219,62 @@ public class Othello {
     }
 
    } else {
-     // AI Player Logic
-     System.out.println("AI gives you stern look. ಠ╭╮ಠ");
+    // AI Player Logic
+    System.out.println("AI gives you stern look. ಠ╭╮ಠ");
 
-     if ((boolean) availableMoves.get(0) == false) {
-      // No available moves? Skip Player 1
-      skipPlayer2 = true;
-     } else {
-       skipPlayer2 = false;
+    if ((boolean) availableMoves.get(0) == false) {
+     // No available moves? Skip Player 1
+     skipPlayer2 = true;
+    } else {
+     skipPlayer2 = false;
 
-       String moveWithLowestSEF = "";
-       int lowestSEF = Integer.MAX_VALUE;
+     String moveWithLowestSEF = "";
+     int lowestSEF = Integer.MAX_VALUE;
 
-       // Print the available moves to the AI
-       System.out.println("AI is thinking...");
-       System.out.println("Number of moves available to AI: " + currentPly.state.moveAndChildNode.size());
-       for (Map.Entry<String, Node> entry : currentPly.state.moveAndChildNode.entrySet()) {
-         System.out.println(entry.getValue().SEF);
-         System.out.println(entry.getKey());
-         if(entry.getValue().SEF < lowestSEF){
-           lowestSEF = entry.getValue().SEF;
-           moveWithLowestSEF = entry.getKey();
-           System.out.println(" Curr SEF: " + lowestSEF);
-           System.out.println(" Curr move: " + moveWithLowestSEF);
-         }
-       }
-
-       System.out.println("AI placed a piece on " + moveWithLowestSEF);
-       // Find the players move in the current nodes children
-       Node move = currentPly.state.moveAndChildNode.get(moveWithLowestSEF);
-       // Set the new node as the currentNode for the next player to start from
-       currentPly = move;
-
-       // Show the AI's move
-       System.out.println(currentPly);
-       currentPly.state.printBoard();
+     // Print the available moves to the AI
+     System.out.println("AI is thinking...");
+     System.out.println("Number of moves available to AI: " + currentPly.state.moveAndChildNode.size());
+     for (Map.Entry < String, Node > entry: currentPly.state.moveAndChildNode.entrySet()) {
+      if (entry.getValue().SEF < lowestSEF) {
+       lowestSEF = entry.getValue().SEF;
+       moveWithLowestSEF = entry.getKey();
+      }
      }
+
+     try{
+        Thread.sleep(2000);
+     }catch(InterruptedException e){
+
+     }
+
+     System.out.println("AI placed a piece on " + moveWithLowestSEF);
+     // Find the players move in the current nodes children
+     Node move = currentPly.state.moveAndChildNode.get(moveWithLowestSEF);
+     // Set the new node as the currentNode for the next player to start from
+     currentPly = move;
+
+     // Show the AI's move
+     System.out.println(currentPly);
+     currentPly.state.printBoard();
+    }
    }
 
    // Go down the game tree
    maxDepth -= 1;
-   nextCuttOffLevel ++;
+   nextCuttOffLevel++;
 
   }
 
+
+  int winningValue = evaluator.winner(currentPly);
+
+  if(winningValue == 1){
+    System.out.println("AI WINS!!!!");
+  }else if(winningValue == 2){
+    System.out.println("YOU WIN!!!!");
+  }else if(winningValue == 9001){ // IT"S OVER 9000!
+    System.out.println("DRAW!!!!");
+  }
 
  }
 

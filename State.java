@@ -3,13 +3,13 @@ import java.util.*;
 public class State {
 
  public Board board = new Board();
- public List<Node> children = new ArrayList<Node>();
- public HashMap<String, Node> moveAndChildNode = new HashMap<String, Node>();
+ public List < Node > children = new ArrayList < Node > ();
+ public HashMap < String, Node > moveAndChildNode = new HashMap < String, Node > ();
  public int SEF;
  public int piece;
  public int player;
  public int numberOfFlanks = 0;
- public boolean hasCorner=false;
+ public boolean hasCorner = false;
  public int numberOfDirections = 0;
  public boolean isroot;
  final String NORTH = "NORTH";
@@ -70,7 +70,7 @@ public class State {
  }
 
  public State(int piece, int player) {
-   //System.out.println("Initial state created");
+  //System.out.println("Initial state created");
   this.SEF = 1;
   this.piece = piece;
   this.player = player;
@@ -86,52 +86,52 @@ public class State {
 
  }
 
-  public State(State s){
-    int[][] newboard = new int[8][8];
+ public State(State s) {
+  int[][] newboard = new int[8][8];
 
-    for (int i = 0; i < newboard.length; i++)
-         newboard[i] = Arrays.copyOf(s.board.board[i], s.board.board[i].length);
+  for (int i = 0; i < newboard.length; i++)
+   newboard[i] = Arrays.copyOf(s.board.board[i], s.board.board[i].length);
 
-    this.board = new Board(newboard);
-    this.SEF = s.SEF;
-    this.isroot = false;
+  this.board = new Board(newboard);
+  this.SEF = s.SEF;
+  this.isroot = false;
+ }
+
+ public void makeMove(String move) {
+
+  int row = 0;
+  int column = Integer.parseInt(Character.toString(move.charAt(1)));
+
+  switch (move.charAt(0)) {
+   case 'A':
+    row = 0;
+    break;
+   case 'B':
+    row = 1;
+    break;
+   case 'C':
+    row = 2;
+    break;
+   case 'D':
+    row = 3;
+    break;
+   case 'E':
+    row = 4;
+    break;
+   case 'F':
+    row = 5;
+    break;
+   case 'G':
+    row = 6;
+    break;
+   case 'H':
+    row = 7;
+    break;
   }
 
- public void makeMove(String move){
-
-   int row = 0;
-   int column = Integer.parseInt(Character.toString(move.charAt(1)));
-
-   switch (move.charAt(0)) {
-      case 'A':
-       row = 0;
-       break;
-      case 'B':
-       row = 1;
-       break;
-      case 'C':
-       row = 2;
-       break;
-      case 'D':
-       row = 3;
-       break;
-      case 'E':
-       row = 4;
-       break;
-      case 'F':
-       row = 5;
-       break;
-      case 'G':
-       row = 6;
-       break;
-      case 'H':
-       row = 7;
-       break;
-     }
 
 
-
-   evaluateMove(row,column,false);
+  evaluateMove(row, column, false);
 
  }
 
@@ -189,8 +189,8 @@ public class State {
 
   for (int i = 0; i < 8; i++) {
    for (int j = 0; j < 8; j++) {
-     //System.out.println("CURRENTLY CHECKING i: " + i + " j: " + j);
-     if ( board.board[i][j] == 0 && evaluateMove(i, j, true)) {
+    //System.out.println("CURRENTLY CHECKING i: " + i + " j: " + j);
+    if (board.board[i][j] == 0 && evaluateMove(i, j, true)) {
      //convert row to letter
      switch (i) {
       case 0:
@@ -261,8 +261,8 @@ public class State {
 
    if (continueSearching) {
     if (checkCardinalDirection((row - 1), column, target, NORTH, checkingForValidMove)) {
-      this.numberOfDirections++;
-      boolList.add(true);
+     this.numberOfDirections++;
+     boolList.add(true);
     }
    }
 
@@ -278,8 +278,8 @@ public class State {
 
     if (continueSearching) {
      if (checkDiagonalDirection(row - 1, column + 1, target, NORTHEAST, checkingForValidMove)) {
-       this.numberOfDirections++;
-       boolList.add(true);
+      this.numberOfDirections++;
+      boolList.add(true);
      }
     }
    }
@@ -297,7 +297,7 @@ public class State {
     if (continueSearching) {
      if (checkDiagonalDirection(row - 1, column - 1, target, NORTHWEST, checkingForValidMove)) {
       boolList.add(true);
-       this.numberOfDirections++;
+      this.numberOfDirections++;
      }
     }
    }
@@ -314,7 +314,7 @@ public class State {
    if (continueSearching) {
     if (checkCardinalDirection(row, (column + 1), target, EAST, checkingForValidMove)) {
      boolList.add(true);
-       this.numberOfDirections++;
+     this.numberOfDirections++;
     }
    }
 
@@ -331,7 +331,7 @@ public class State {
    if (continueSearching) {
     if (checkCardinalDirection(row, (column - 1), target, WEST, checkingForValidMove)) {
      boolList.add(true);
-       this.numberOfDirections++;
+     this.numberOfDirections++;
     }
    }
 
@@ -348,7 +348,7 @@ public class State {
    if (continueSearching) {
     if (checkCardinalDirection(row + 1, column, target, SOUTH, checkingForValidMove)) {
      boolList.add(true);
-       this.numberOfDirections++;
+     this.numberOfDirections++;
     }
    }
 
@@ -365,7 +365,7 @@ public class State {
     if (continueSearching) {
      if (checkDiagonalDirection(row + 1, column + 1, target, SOUTHEAST, checkingForValidMove)) {
       boolList.add(true);
-       this.numberOfDirections++;
+      this.numberOfDirections++;
      }
     }
    }
@@ -384,7 +384,7 @@ public class State {
     if (continueSearching) {
      if (checkDiagonalDirection(row + 1, column - 1, target, SOUTHWEST, checkingForValidMove)) {
       boolList.add(true);
-       this.numberOfDirections++;
+      this.numberOfDirections++;
      }
     }
    }
@@ -393,19 +393,19 @@ public class State {
   // Check if a move is valid
   if (boolList.size() == 0) {
    isThisAValidMove = false;
-  }else{
+  } else {
 
-    // Check if the piece is on a corner
-    if( (row == 0 && column == 0) || (row == 0 && column == 7) || (row == 7 && column == 0) || (row == 7 && column == 7) ) {
-      hasCorner = true;
-    }
+   // Check if the piece is on a corner
+   if ((row == 0 && column == 0) || (row == 0 && column == 7) || (row == 7 && column == 0) || (row == 7 && column == 7)) {
+    hasCorner = true;
+   }
 
   }
 
-	//if active gameplay and not checking
+  //if active gameplay and not checking
   if (!checkingForValidMove) {
-    // Everything went fine. Now place the piece onto the board
-  this.board.board[row][column] = piece;
+   // Everything went fine. Now place the piece onto the board
+   this.board.board[row][column] = piece;
 
    //TODO: PRINT BOARD MUTED
    //printBoard(); //
@@ -437,7 +437,7 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("N FLIPPED");
      board.board[row][column] = piece;
-      this.numberOfFlanks++;
+     this.numberOfFlanks++;
     }
     return true;
    }
@@ -446,7 +446,7 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("E FLIPPED");
      board.board[row][column] = piece;
-    	this.numberOfFlanks++;
+     this.numberOfFlanks++;
 
     }
     return true;
@@ -456,7 +456,7 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("W FLIPPED");
      board.board[row][column] = piece;
-      this.numberOfFlanks++;
+     this.numberOfFlanks++;
 
     }
     return true;
@@ -466,7 +466,7 @@ public class State {
     if (!checkingForValidMove) {
      //System.out.println("S FLIPPED");
      board.board[row][column] = piece;
-      this.numberOfFlanks++;
+     this.numberOfFlanks++;
     }
     return true;
    }
@@ -480,67 +480,67 @@ public class State {
   int piece = (target == 1) ? 2 : 1;
 
   if (board.board[row][column] == piece) {
-    //System.out.println("EXIT 1");
+   //System.out.println("EXIT 1");
    return true;
   } else if (direction == NORTHEAST && (row == 0 || column == 7)) {
-    //System.out.println("EXIT 2");
+   //System.out.println("EXIT 2");
    return false;
   } else if (direction == NORTHWEST && (row == 0 || column == 0)) {
-    //System.out.println("EXIT 3");
+   //System.out.println("EXIT 3");
    return false;
   } else if (direction == SOUTHEAST && (row == 7 || column == 7)) {
-    //System.out.println("EXIT 4");
+   //System.out.println("EXIT 4");
    return false;
   } else if (direction == SOUTHWEST && (row == 7 || column == 0)) {
-    //System.out.println("EXIT 2");
+   //System.out.println("EXIT 2");
    return false;
   }
 
 
   if (direction == NORTHEAST) {
-    //System.out.println("GOT INTO NE");
+   //System.out.println("GOT INTO NE");
    if (checkDiagonalDirection(row - 1, column + 1, target, NORTHEAST, checkingForValidMove) == true) {
     // System.out.println("NE OK");
     if (!checkingForValidMove) {
-    // System.out.println("NE FLIPPED");
+     // System.out.println("NE FLIPPED");
      board.board[row][column] = piece;
-      this.numberOfFlanks++;
+     this.numberOfFlanks++;
     }
     return true;
    }
   } else if (direction == NORTHWEST) {
-    //System.out.println("GOT INTO NW");
+   //System.out.println("GOT INTO NW");
    if (checkDiagonalDirection(row - 1, column - 1, target, NORTHWEST, checkingForValidMove) == true) {
-     // System.out.println("NW OK");
+    // System.out.println("NW OK");
     if (!checkingForValidMove) {
      // System.out.println("NW FLIPPED");
      board.board[row][column] = piece;
-      this.numberOfFlanks++;
+     this.numberOfFlanks++;
     }
     return true;
    }
   } else if (direction == SOUTHEAST) {
-  //  System.out.println("GOT INTO SE");
+   //  System.out.println("GOT INTO SE");
    if (checkDiagonalDirection(row + 1, column + 1, target, SOUTHEAST, checkingForValidMove) == true) {
     // System.out.println("SE OK");
     if (!checkingForValidMove) {
      //System.out.println("SE FLIPPED");
      board.board[row][column] = piece;
-      this.numberOfFlanks++;
+     this.numberOfFlanks++;
     }
     return true;
    }
   } else if (direction == SOUTHWEST) {
-    //System.out.println("GOT INTO SW");
+   //System.out.println("GOT INTO SW");
    if (checkDiagonalDirection(row + 1, column - 1, target, SOUTHWEST, checkingForValidMove) == true) {
     // System.out.println("SW NOT OK");
     if (!checkingForValidMove) {
      // System.out.println("SW FLIPPED");
      board.board[row][column] = piece;
-      this.numberOfFlanks++;
+     this.numberOfFlanks++;
     }
 
-  //  System.out.println("SW FINE");
+    //  System.out.println("SW FINE");
     return true;
    }
 
