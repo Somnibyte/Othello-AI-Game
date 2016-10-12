@@ -181,7 +181,6 @@ public class Othello {
     t1.start();
     try {
      t1.join();
-     System.out.println("After: " + currentPly.state.children.size());
     } catch (InterruptedException e) {
 
     }
