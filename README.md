@@ -8,6 +8,9 @@ Othello AI Game
 # Details 
 Othello/Reversi game with AI built in using minimax algorithim and a simple static evaluation function. 
 
+The pieces in the game are represented as numbers. 1 is black (AI), and 2 is white (you). You start first with the white piece (2).
+
+
 # How to run the game
 Open your termina directory and type:
 
