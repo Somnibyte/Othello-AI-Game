@@ -1,6 +1,9 @@
 # Othello-AI-Game
 Othello AI Game
 
+![](http://i.imgur.com/LIpTdHg.png)
+
+
 # Authors 
 * [Eddie Olson](https://github.com/laserutouettal)
 * Guled Ahmed 
