@@ -15,10 +15,13 @@ The pieces in the game are represented as numbers. 1 is black (AI), and 2 is whi
 
 
 # How to run the game
-Open your terminal directory and type:
+
+* Download the game. 
+
+* Open your terminal directory and type:
 
 `cd Othello`
 
  `clear && javac Othello.java && java Othello`
  
- And then put your sunglasses on. 😎
+ * And then put your sunglasses on. 😎
